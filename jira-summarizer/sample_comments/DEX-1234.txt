@@ -1,0 +1,33 @@
+jira Id: DEX-1234
+Title: APAC- LLM Based Jira Comments Summarizer
+Assignee: Ashoka
+Status: InProgress
+description: "
+When there are lot of comments in a Jira story/task, one needs to go through all the comments to understand the status of the jira.
+Develop a LLM based application which will take Jira number as user input and reads all the comments and provide quick summary on the status of the jira.
+Teams:
+1) Ashoka Bedre Krishnamurthy
+2) Avanish V Patil
+3) Girija Kshirsagar
+"
+comment1:
+This is High Level View:
+https://docs.google.com/presentation/d/1ViaftP8Xqo4AuUAR5JgPapMaD1AG72ANuECfSS9uMbQ/edit#slide=id.g243f9cf5745_0_0
+comment2:
+We are working on UI. We want to use flash framework to achieve that.
+comment3:
+We are using LLM gpt-3.5 model
+comment4:
+Work is in progress
+comment5:
+Avanish is working on UI
+comment6:
+Girija and Ashoka are working on backend
+comment7:
+Will integrate in some time.
+comment8:
+We want to see some thing working so that we can use proper jira comments to feed into LLM
+comment9:
+Still working on this.
+comment10:
+May take some more time.

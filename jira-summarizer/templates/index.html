@@ -1,0 +1,69 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Jira Summary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" />
+    <div class="spinner-container" id="spinner-container" style="display: none;">
+        <i id="loading-spinner" class="fas fa-spinner fa-spin"></i>
+    </div>
+</head>
+<body>
+    <div class="container">
+        <h1>Jira Summarizer</h1>
+        <form id="jira-form">
+            <input type="text" id="jira-id" name="jira-id" placeholder="Enter Jira ID">
+            <button id="magic-button" type="submit">Get Jira Summary</button>
+        </form>
+        <div id="result">
+            <h2 id="Jira_Id_h2"></h2>
+            <div id="Jira_Id"></div>
+            <h2 id="Title_h2"></h2>
+            <div id="Title"></div>
+            <h2 id="Assignee_h2"></h2>
+            <div id="Assignee"></div>
+            <h2 id="Status_h2"></h2>
+            <div id="Status"></div>
+            <h2 id="Summary_h2"></h2>
+            <div id="Summary"></div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#jira-form').on('submit', function (e) {
+                e.preventDefault();
+                $('#spinner-container').show();
+                $.ajax({
+                    url: '/process',
+                    data: $('#jira-form').serialize(),
+                    type: 'POST',
+                    success: function (response) {
+                        $('#Jira_Id_h2').text("Jira Id");
+                        $('#Title_h2').text("Title");
+                        $('#Assignee_h2').text("Assignee");
+                        $('#Status_h2').text("Status");
+                        $('#Summary_h2').text("Summary")
+                        $('#Jira_Id').text(response.jira_id);
+                        $('#Title').text(response.title);
+                        $('#Assignee').text(response.assignee);
+                        $('#Status').text(response.status);
+                        $('#Summary').text(response.summary)
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    },
+                    complete: function () {
+                        $('#spinner-container').hide();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

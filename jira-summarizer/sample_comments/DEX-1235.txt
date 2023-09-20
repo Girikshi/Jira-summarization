@@ -1,0 +1,47 @@
+jira Id: DEX-1235
+Title: Add correct istio config for sessions RPC connection. Remove port whitelist
+Assignee: Avanish
+Status: Completed
+description: "
+Continue work on https://jira.cloudera.com/browse/DEX-8621?focusedCommentId=5811690&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-5811690
+
+There is a two way RPC connection between the Livy pod and Session driver pod on port 10000. When the traffic on this connection goes through Istio, Session creation fails with a TLS error.
+
+As a workaround on both pods an exclude annotation was added traffic.sidecar.istio.io/excludeOutboundPorts to exclude that port's traffic from Istio
+
+Livy pod: https://github.infra.cloudera.com/CDH/dex/commit/3741b1accae210cc53bddffc2c1fd40e46a308e1
+Driver: https://github.infra.cloudera.com/CDH/dex/blob/5c2eb342d7d5cc0e531addd3f1edf01ffbabf46a/pkg/runtime/runners/spark/utils.go#L862
+When includeInboundPorts/OutboundPorts was tried, we still ran into errors. Consulted Istio experts from other teams, they also were not sure.
+
+To ensure that the traffic is secure, it should go through Istio. Task of this Jira is to remove the exclusion annotations and make a proper fix instead.
+"
+
+comment1:
+Vinod Kumar Vavilapalli，as we discussed offline,  assigned this to you for the load balance of the session GA tasks. This is a medium task.
+comment2:
+Surya Balakrishnan please add more details in the JIRA description so that I can get this done through someone else. Thanks.
+comment3:
+Added more details, Please reach out if there are any other clarifications
+comment4:
+Also adding Connor Woodall to provide his inputs
+comment5:
+Avanish V Patil A Few Questions
+Is the RPC connection secured (TLS) in both directions?
+Did you remove this annotation from just one service and see if this issue occurs in either case?
+Does this issue reproduce if we remove strict mtls istio configuration in the CDE?
+Does this issue occur if we disable Kerberos in the CDE?
+
+I don't think we need to increase the RPC handshake timeout. It's already set to the 90s, so that doesn't seem to be the issue.
+comment6:
+Currently, it is not secure and to make it secure is the aim of this Jira.
+Yes, I have tried to remove the annotation for the Livy -> Sessions driver pod and keep it for the other way round, in this case both the driver and executor pods come up but the Session ends up in a failed state.
+Currently we have the default istio mTLS configuration for these pods i.e., permissive and not strict. Only the dex-api pod has strict mTLS configuration.
+Haven't tried that yet.
+
+comment7:
+Avanish V Patil Istio has STRICT peer authentication setup for all namespaces as CDE is now using Liftie Istio by default. Previously CDE Istio also had STRICT peer authentication.
+
+comment8:
+Yes Connor Woodall, the peerauthentication that is setup in the dex-app namespace is in STRICT mode, but then the peer authentication has a selector that matches label only for the dex-app-api pod.
+
+Here is the description of the peer authentication being used in the dex-app namespaces.
