@@ -1,4 +1,4 @@
 # Jira-summarization
-Give the jira summary to the end user by using Langchain model.
+Give the jira ticket summary to the end user by using Langchain model.
 
 
